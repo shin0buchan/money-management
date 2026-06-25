@@ -1,0 +1,1 @@
+8 functions for now, i made this to manage my expense and income
