@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
 using namespace std;
 class Transaction
 {
@@ -16,7 +17,7 @@ public:
     void setId(int newId) {
         id = newId;
     }
-    void nhap(vector<Transaction>& x){
+    void nhap(){
         cout << "Nhap tieu de" << ""; cin.ignore(); getline(cin, title); cout << endl;
     
         cout << "Nhap gia tri" << ""; ; cin >> amount; cout << endl;
@@ -41,6 +42,74 @@ public:
         }
 
         fout.close();
+    }
+    void sort(vector<Transaction>& x, int choice) {
+       
+            cout << "1. sort by id" << endl;
+            cout << "2. sort by cost" << endl;
+            cout << "3. sort by date" << endl;
+            switch (choice) {
+            case 1: {
+                
+                for (int i = 0; i < x.size(); i++) {
+                    for (int j = i + 1; j < x.size(); j++) {
+                        if (x[i].id < x[j].id) {
+                            swap(x[i], x[j]);
+                        }
+                    }
+                }
+            }
+                  break;
+            case 2: {
+                for (int i = 0; i < x.size(); i++) {
+                    for (int j = i + 1; j < x.size(); j++) {
+                        if (x[i].amount < x[j].amount) {
+                            swap(x[i], x[j]);
+                        }
+                    }
+                }
+            }break;
+            case 3: {
+                for (int i = 0; i < x.size(); i++) {
+                    for (int j = i + 1; j < x.size(); j++) {
+                        if (x[i].date < x[j].date) {
+                            swap(x[i], x[j]);
+                        }
+                    }
+                }
+            }break;
+            default:{
+                      return;
+                  }
+            }
+        } 
+    
+    void loadfromFile(vector<Transaction>& x) {
+        ifstream fin("data.txt");
+        if (!fin) {
+            return;
+        }
+        string line;
+        while (getline(fin, line)) {
+            stringstream ss(line);
+            Transaction t;
+            string token;
+            getline(ss, token, '|');
+            t.id = stoi(token);
+            getline(ss, token, '|');
+            t.title = token;
+           
+            getline(ss, token, '|');
+            t.amount = stod(token);
+            getline(ss, token, '|');
+            t.category = token;
+            getline(ss, token, '|');
+            t.date = token;
+            getline(ss, token, '|');
+            t.type = token;
+            x.push_back(t);
+        }
+        fin.close();
     }
     void hienthi(vector<Transaction>& x) {
         for (int i = 0; i < x.size(); i++) {
@@ -113,7 +182,9 @@ int main() {
         cout << "4. Thong ke tong chi\n";
         cout << "5. Thong ke tong thu\n";
         cout << "6. LuuFile\n";
-        cout << "7. Thoat\n";
+        cout << "7. LoadFile\n";
+        cout << "8. Sort\n";
+        cout << "9. Thoat\n";
         
 
 
@@ -140,7 +211,7 @@ int main() {
             int target;
             cin >> target;
             x.sua(y, target);
-        }
+        }break;
         case 4: {
             x.thongketongchi(y);
         }
@@ -152,9 +223,19 @@ int main() {
         case 6: {
             x.saveToFile(y);
         }
+        case 7: {
+            y.clear();
+            x.loadfromFile(y);
+        }
+        case 8: {
+            int choice;
+            cin >> choice;
+                x.sort(y, choice);
+                
+        }
         default: {
             return 0;
         }
         }
-    } while (choice != 6);
+    } while (choice != 7);
 }
