@@ -43,6 +43,24 @@ public:
 
         fout.close();
     }
+    int getnextid(vector<Transaction>& x) {
+        if (x.empty())
+        {
+            return 1;
+        }
+
+        Transaction max = x[0];
+
+        for (int i = 1; i < x.size(); i++)
+        {
+            if (max.id < x[i].id)
+            {
+                max = x[i];
+            }
+        }
+
+        return max.id + 1;
+    }
     void sort(vector<Transaction>& x, int choice) {
        
             cout << "1. sort by id" << endl;
@@ -191,7 +209,7 @@ int main() {
         cin >> choice;
         switch (choice) {
         case 1: {
-            x.nhap(y);
+            x.nhap();
             x.setId(nextId);
             nextId++;
             y.push_back(x);
@@ -222,20 +240,21 @@ int main() {
               break;
         case 6: {
             x.saveToFile(y);
-        }
+        }break;
         case 7: {
             y.clear();
             x.loadfromFile(y);
-        }
+            nextId = x.getnextid(y);
+        }break;
         case 8: {
             int choice;
             cin >> choice;
-                x.sort(y, choice);
-                
-        }
+            x.sort(y, choice);
+
+        }break;
         default: {
             return 0;
         }
         }
-    } while (choice != 7);
+    } while (choice != 9);
 }
